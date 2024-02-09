@@ -7,6 +7,7 @@
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from lxml import etree
+import lxml.etree
 
 
 class StockProductionLot(models.Model):
@@ -21,7 +22,7 @@ class StockProductionLot(models.Model):
         res = super(StockProductionLot, self).fields_view_get(
             view_id=view_id, view_type=view_type, toolbar=toolbar,
             submenu=submenu)
-        eview = etree.fromstring(res['arch'])
+        eview = etree.fromstring(res['arch'], parser=lxml.etree.XMLParser(resolve_entities=False))
         xml_header = eview.xpath("//header")
         if not xml_header:
             # Create a header
