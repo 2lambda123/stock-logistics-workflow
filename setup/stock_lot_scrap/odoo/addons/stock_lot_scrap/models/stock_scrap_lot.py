@@ -44,23 +44,6 @@ class StockProductionLot(models.Model):
         return res
 
     def _prepare_scrap_vals(self, quant, scrap_location_id):
-        """Prepares scrap values for a specific quant.
-        Parameters:
-            - quant (object): A quant object containing information about a specific product.
-            - scrap_location_id (integer): The ID of the scrap location where the product will be moved.
-        Returns:
-            - dictionary: A dictionary containing the necessary values for creating a scrap move.
-        Processing Logic:
-            - Get the name of the lot from the quant object.
-            - Get the ID of the product from the quant object.
-            - Get the ID of the unit of measure for the product.
-            - Get the quantity of the product from the quant object.
-            - Get the ID of the current location of the product.
-            - Get the ID of the scrap location.
-            - Get the ID of the lot.
-            - Get the ID of the picking associated with the quant.
-            - Get the ID of the package associated with the quant."""
-        
         self.ensure_one()
         return {
             'origin': quant.lot_id.name,
@@ -76,23 +59,6 @@ class StockProductionLot(models.Model):
 
     @api.multi
     def action_scrap_lot(self):
-        """This function scrapes a lot by creating a stock scrap and returning the result.
-        Parameters:
-            - self (object): The current record.
-        Returns:
-            - result (dict): A dictionary containing the result of the function.
-        Processing Logic:
-            - Filter quants in internal location.
-            - Raise an error if no quants are found.
-            - Create a stock scrap object.
-            - Get the scrap location ID.
-            - Sort quants by warehouse ID.
-            - Create a scrap for each quant.
-            - Add the scrap to the result.
-            - Set the context for the result.
-            - Set the domain for the result if there is more than one scrap.
-            - Set the view and res_id for the result if there is only one scrap."""
-        
         self.ensure_one()
         quants = self.quant_ids.filtered(
             lambda x: x.location_id.usage == 'internal',
